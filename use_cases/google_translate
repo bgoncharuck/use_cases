@@ -1,0 +1,43 @@
+Future<String> google_translate({required String sourceText, String? to}) async {
+  to ??= Platform.localeName.substring(0, 2);
+
+  const baseUrl = 'translate.googleapis.com';
+  const path = '/translate_a/single';
+
+  final parameters = {
+    'client': 'gtx',
+    'sl': 'auto',
+    'tl': to,
+    'hl': 'en',
+    'dt': 't',
+    'ie': 'UTF-8',
+    'oe': 'UTF-8',
+    'otf': '1',
+    'ssel': '0',
+    'tsel': '0',
+    'kc': '7',
+    'q': sourceText
+  };
+
+  final url = Uri.https(baseUrl, path, parameters);
+  final data = await http.get(url);
+
+  if (data.statusCode != 200) {
+    throw http.ClientException('Error ${data.statusCode}: ${data.body}', url);
+  }
+
+  final jsonData = jsonDecode(data.body);
+  if (jsonData == null) {
+    throw http.ClientException('Error: Can\'t parse json data');
+  }
+
+  final sb = StringBuffer();
+
+  for (int c = 0; c < jsonData[0].length; c++) {
+    sb.write(jsonData[0][c][0]);
+  }
+
+  final translated = sb.toString();
+
+  return translated;
+}
