@@ -24,10 +24,10 @@ class BottomDrawerIndicator extends StatelessWidget {
 }
 
 const _defaultHeight = 424.0;
-const _defaultOffset = 0.475;
-const _heightMultiplier = 2.0;
+const _heightDivider = 212.0;
+const _offsetForHeightDivider = 0.475;
 double _animationEndOffset(double height) =>
-    _defaultOffset / (height / _defaultHeight * _defaultOffset * _heightMultiplier);
+    _offsetForHeightDivider / (height / _defaultHeight * _offsetForHeightDivider * (height / _heightDivider));
 
 class BottomDrawerWrapper extends StatefulWidget {
   const BottomDrawerWrapper({
@@ -93,7 +93,7 @@ class BottomDrawerWrapperState extends State<BottomDrawerWrapper> with SingleTic
           }
         },
         child: AdaptiveHeightDecorated(
-            height: widget.height * _heightMultiplier,
+            height: widget.height * (widget.height / _heightDivider),
             decoration: BoxDecoration(
               color: widget.backgroundColor,
               borderRadius: const BorderRadius.only(
