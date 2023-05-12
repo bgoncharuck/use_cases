@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 
-      final repaintContext = roulettePreviewKey.currentContext;
+      final repaintContext = widgetKey.currentContext;
       if (repaintContext == null) {
         return false;
       }
