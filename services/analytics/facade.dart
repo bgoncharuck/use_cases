@@ -5,44 +5,44 @@ import '/services/analytics/providers/google.dart';
 import 'i_analytics_event.dart';
 import 'i_analytics_provider.dart';
 
-class AnalyticsObserver {
+class AnalyticsFacade {
   final IAnalyticsProvider amplitude = AmplitudeAnalyticsProvider();
   final IAnalyticsProvider google = GoogleAnalyticsProvider();
 
-  Future initAll() async {
+  Future<void> initializeProviders() async {
     if (amplitude.isNotInitialized) {
-      await amplitude.init();
+      await amplitude.initialize();
     }
     if (google.isNotInitialized) {
-      await google.init();
+      await google.initialize();
     }
   }
 
-  Future disposeAll() async {
+  Future<void> disposeProviders() async {
     await amplitude.dispose();
     await google.dispose();
   }
 
-  Future event(IAnalyticsEvent event) async {
+  Future<void> trackEvent(IAnalyticsEvent event) async {
     if (event.config.skip) {
       return;
     }
-    if (amplitude.initialized) {
+    if (amplitude.isInitialized) {
       await amplitude.addEvent(event);
     }
-    if (google.initialized) {
+    if (google.isInitialized) {
       await google.addEvent(event);
     }
   }
 
-  Future properties(List<AnalyticsProperty> properties) async {
+  Future<void> setProperties(List<AnalyticsProperty> properties) async {
     for (final property in properties) {
       UserProperties()[property.name] = property.value;
     }
-    if (amplitude.initialized) {
+    if (amplitude.isInitialized) {
       await amplitude.addProperties(properties);
     }
-    if (google.initialized) {
+    if (google.isInitialized) {
       await google.addProperties(properties);
     }
   }
