@@ -4,8 +4,10 @@ import 'dart:isolate';
 void main() async {
   final taskQueue = StreamController<int>();
 
+  final resultReceivePort = ReceivePort(); // To receive results
+
   for (int i = 0; i < 4; i++) {
-    Isolate.spawn(consumerIsolate, taskQueue.sink);
+    Isolate.spawn(consumerIsolate, [taskQueue.stream, resultReceivePort.sendPort]);
   }
 
   // Add tasks to the queue
@@ -13,23 +15,30 @@ void main() async {
     taskQueue.add(i);
   }
 
-  await Future.delayed(Duration(seconds: 1)); // Give time for processing
-
   await taskQueue.close();
+
+  // Receive and print results
+  await for (final result in resultReceivePort) {
+    print("Received result: $result");
+  }
 }
 
-void consumerIsolate(SendPort sendPort) {
+void consumerIsolate(List<dynamic> args) {
+  final taskStream = args[0] as Stream<int>;
+  final resultSendPort = args[1] as SendPort;
+
   final receivePort = ReceivePort();
-  sendPort.send(receivePort.sendPort);
+  resultSendPort.send(receivePort.sendPort);
 
   receivePort.listen((message) {
-    if (message is StreamSink<int>) {
-      final taskStream = Stream<int>.fromStreamSink(message);
-      taskStream.listen((task) {
-        final result = calculateFactorial(task);
-        print("Task $task: Result $result");
-      });
+    if (message is int) {
+      final result = calculateFactorial(message);
+      resultSendPort.send(result); // Send result back
     }
+  });
+
+  taskStream.listen((task) {
+    receivePort.send(task); // Start processing task
   });
 }
 
