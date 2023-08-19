@@ -38,7 +38,7 @@ void consumerIsolate(List<dynamic> args) {
   });
 
   taskStream.listen((task) {
-    receivePort.send(task); // Start processing task
+    receivePort.sendPort.send(task); // Start processing task
   });
 }
 
