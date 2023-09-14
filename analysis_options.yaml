@@ -1,0 +1,41 @@
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.config.dart"
+  
+  language:
+    strict-inference: true
+
+  errors:
+    unused_import: warning
+    library_private_types_in_public_api: warning
+    depend_on_referenced_packages: warning
+    inference_failure_on_function_return_type: warning
+    prefer_final_fields: error
+    prefer_final_locals: error
+    prefer_final_in_for_each: error
+    prefer_const_constructors: warning
+    prefer_const_constructors_in_immutables: warning
+    await_only_futures: error
+    avoid_unnecessary_containers: error
+    unrelated_type_equality_checks: error
+
+linter:
+  rules:
+    avoid_returning_null_for_future: true
+    avoid_bool_literals_in_conditional_expressions: true
+    prefer_single_quotes: true
+    cancel_subscriptions: true
+    no_adjacent_strings_in_list: true
+    test_types_in_equals: true
+    throw_in_finally: true
+    unnecessary_statements: true
+    always_declare_return_types: true
+    only_throw_errors: true
+    tighten_type_of_initializing_formals: true
+    unnecessary_await_in_return: false
+    unnecessary_string_escapes: true
+    secure_pubspec_urls: true
