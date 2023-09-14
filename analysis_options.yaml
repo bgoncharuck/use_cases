@@ -25,6 +25,8 @@ analyzer:
 
 linter:
   rules:
+    public_member_api_docs: false
+    type_annotate_public_apis: false
     avoid_returning_null_for_future: true
     avoid_bool_literals_in_conditional_expressions: true
     prefer_single_quotes: true
