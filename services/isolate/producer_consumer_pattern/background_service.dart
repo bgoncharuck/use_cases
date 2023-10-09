@@ -60,6 +60,7 @@ class BackgroundServiceFactory<P, R> {
 Future<void> main() async {
   final factorialService = await BackgroundServiceFactory<int, int>().create(calculateFactorial);
 
+  /// can be listened in various places, multiple times
   factorialService.result.listen((result) {
     print(result);
   });
