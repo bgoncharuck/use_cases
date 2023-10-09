@@ -1,34 +1,41 @@
-import 'dart:async';
 import 'dart:isolate';
 
 void main() async {
-  final taskQueue = StreamController<int>();
-  final resultReceivePort = ReceivePort();
+  final resultPort = ReceivePort();
+  late SendPort taskSendPort;
 
   for (var i = 0; i < 4; i++) {
-    await Isolate.spawn(consumerIsolate, [taskQueue.stream, resultReceivePort.sendPort]);
+    await Isolate.spawn(consumerIsolate, [resultPort.sendPort]);
   }
 
-  resultReceivePort.listen((message) {
+  resultPort.listen((message) {
+    if (message is SendPort) {
+      taskSendPort = message;
+      sendTasks(taskSendPort);
+    }
     if (message is int) {
       print("Received result: $message");
     }
   });
+}
 
+void sendTasks(SendPort taskSendPort) {
   for (var i = 1; i <= 10; i++) {
-    taskQueue.add(i);
+    taskSendPort.send(i);
   }
-
-  await taskQueue.close();
 }
 
 void consumerIsolate(List<dynamic> args) {
-  final taskStream = args[0] as Stream<int>;
-  final resultSendPort = args[1] as SendPort;
+  final resultSendPort = args[0] as SendPort;
+  final taskPort = ReceivePort();
 
-  taskStream.listen((message) {
-    final result = calculateFactorial(message);
-    resultSendPort.send(result);
+  resultSendPort.send(taskPort.sendPort);
+
+  taskPort.listen((message) {
+    if (message is int) {
+      final result = calculateFactorial(message);
+      resultSendPort.send(result);
+    }
   });
 }
 
