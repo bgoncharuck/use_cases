@@ -25,19 +25,16 @@ analyzer:
 
 linter:
   rules:
-    public_member_api_docs: false
-    type_annotate_public_apis: false
-    avoid_returning_null_for_future: true
-    avoid_bool_literals_in_conditional_expressions: true
+    always_use_package_imports: false
     prefer_single_quotes: true
+    prefer_int_literals: false
     cancel_subscriptions: true
-    no_adjacent_strings_in_list: true
-    test_types_in_equals: true
-    throw_in_finally: true
-    unnecessary_statements: true
     always_declare_return_types: true
-    only_throw_errors: true
-    tighten_type_of_initializing_formals: true
     unnecessary_await_in_return: false
     unnecessary_string_escapes: true
     secure_pubspec_urls: true
+    public_member_api_docs: false
+    type_annotate_public_apis: false
+    lines_longer_than_80_chars: false
+    sort_constructors_first: false
+    prefer_constructors_over_static_methods: false
