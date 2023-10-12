@@ -1,5 +1,5 @@
-mixin IUseCase<T, P> {
-  Future<T> execute({required P params});
+mixin IUseCase<P, R> {
+  Future<R> execute({required P params});
 }
 
 class NoParams {}
