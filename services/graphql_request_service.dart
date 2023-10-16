@@ -14,10 +14,14 @@ class RawGraphQLService {
     Map<String, dynamic>? variables,
     Map<String, String>? headers,
   }) async {
-    final mergedHeaders = {...this.headers ?? {}, ...headers ?? {}};
     final response = await http.post(
       Uri.parse(baseUrl),
-      headers: mergedHeaders,
+      headers: {
+        ...this.headers ?? {},
+        ...headers ?? {},
+        'Content-Type': 'application/json',
+        'Accept': '*/*',
+      },
       body: json.encode({'query': query, 'variables': variables}),
     );
     if (response.statusCode != 200) {
@@ -31,10 +35,14 @@ class RawGraphQLService {
     Map<String, dynamic>? variables,
     Map<String, String>? headers,
   }) async {
-    final mergedHeaders = {...this.headers ?? {}, ...headers ?? {}};
     final response = await http.post(
       Uri.parse(baseUrl),
-      headers: mergedHeaders,
+      headers: {
+        ...this.headers ?? {},
+        ...headers ?? {},
+        'Content-Type': 'application/json',
+        'Accept': '*/*',
+      },
       body: json.encode({'mutation': mutation, 'variables': variables}),
     );
     if (response.statusCode != 200) {
