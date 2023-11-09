@@ -19,7 +19,7 @@ TreeFileNode _buildTreeFileSystem(List<String> virtualPaths, String rootNode) {
 
     final root = TreeFileNode(rootNode);
     for (final virtualPath in virtualPaths) {
-      final parts = virtualPath.split('/');
+      final parts = virtualPath.split('/').sublist(1);
       var current = root;
       current = _traverseTree(parts, current);
       final file = TreeFileNode(parts.last);
