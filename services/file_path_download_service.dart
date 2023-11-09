@@ -11,7 +11,6 @@ abstract class DownloadService {
   Future<bool> doFilesExist(Iterable<String> urls);
   Future<bool> downloadMultipleFiles(Iterable<String> urls);
   Future<File?> loadFile(String fileName);
-  Future<List<String>> getAllDownloadedFiles();
 }
 
 class DefaultDownloadService implements DownloadService {
@@ -132,15 +131,8 @@ class DefaultDownloadService implements DownloadService {
   String _getFilePathFromUrl(String url) {
     final uri = Uri.parse(url);
     final pathSegments = uri.pathSegments;
-    final subPathSegments = pathSegments.sublist(1, pathSegments.length - 1);
+    final subPathSegments = pathSegments.sublist(0, pathSegments.length - 1);
     final subPath = subPathSegments.join('/');
     return '/$subPath/${uri.pathSegments.last}';
-  }
-
-  @override
-  Future<List<String>> getAllDownloadedFiles() async {
-    final appDocDir = await getApplicationDocumentsDirectory();
-    final files = appDocDir.listSync(recursive: true, followLinks: false);
-    return files.map((file) => file.path).toList();
   }
 }
