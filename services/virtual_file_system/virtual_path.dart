@@ -1,17 +1,5 @@
 // ignore_for_file: one_member_abstracts
 
-import 'file_system_interface.dart';
-
-final Map<String, String> virtualPathToRealPathPair = {};
-final Map<FileNode, String> fileNodeToVirtualPathPair = {};
-String fileNodeToRealPath(FileNode fileNode) => virtualPathToRealPathPair[fileNodeToVirtualPathPair[fileNode]!]!;
-
-List<String> prepareVirtualPaths(List<String> realPaths, String rootNode) {
-  final virtualToRealPathPairs = buildVirtualToRealPathPairs(realPaths: realPaths, rootNode: rootNode);
-  clearAndFillVirtualPathToRealPathRuntimeMap(virtualToRealPathPairs);
-  return virtualToRealPathPairs.keys.toList();
-}
-
 Map<String, String> buildVirtualToRealPathPairs({required List<String> realPaths, required String rootNode}) {
   final virtualPathVisitor = VirtualPathVisitor(rootNode: rootNode);
   final virtualToRealPathPairs = <String, String>{};
@@ -20,12 +8,6 @@ Map<String, String> buildVirtualToRealPathPairs({required List<String> realPaths
     virtualToRealPathPairs[virtualPath] = realPath;
   }
   return virtualToRealPathPairs;
-}
-
-void clearAndFillVirtualPathToRealPathRuntimeMap(Map<String, String> virtualToRealPathPairs) {
-  virtualPathToRealPathPair
-    ..clear()
-    ..addAll(virtualToRealPathPairs);
 }
 
 abstract class PathVisitor {
