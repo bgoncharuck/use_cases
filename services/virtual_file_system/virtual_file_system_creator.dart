@@ -2,7 +2,7 @@ import 'file_system_interface.dart';
 import 'tree_file_system.dart';
 import 'virtual_path.dart';
 
-FileSystem createVirtualSystem(List<String> realPaths, String rootNode) {
+FileSystem createVirtualFileSystem(List<String> realPaths, String rootNode) {
   try {
     final virtualPaths = prepareVirtualPaths(realPaths, rootNode);
     final root = _buildTreeFileSystem(virtualPaths, rootNode);
