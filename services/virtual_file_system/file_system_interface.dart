@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
 
+import 'dart:io';
+
 abstract class FileNode {
   String get name;
 
@@ -10,6 +12,10 @@ abstract class FileNode {
   bool get isDirectory;
 
   FileNode? findChild(String name);
+
+  List<FileNode> get files;
+
+  List<FileNode> get directories;
 
   @override
   bool operator ==(Object other) =>
@@ -22,4 +28,5 @@ abstract class FileNode {
 
 abstract class FileSystem {
   FileNode get root;
+  File open(FileNode node);
 }
