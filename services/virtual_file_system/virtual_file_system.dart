@@ -5,6 +5,7 @@ import 'virtual_path.dart';
 
 export 'file_system_interface.dart';
 export 'tree_file_system.dart';
+export 'virtual_path.dart';
 
 class VirtualFileSystem implements FileSystem {
   late final Map<String, String> virtualPathToRealPathPair;
@@ -22,7 +23,7 @@ class VirtualFileSystem implements FileSystem {
     required List<String> realPaths,
     required String rootName,
   }) {
-    _root = TreeFileNode(rootName);
+    _root = TreeFileNode(rootName, parent: null);
     root = _buildTreeFileSystem(
       _prepareVirtualPaths(
         realPaths,
@@ -42,7 +43,7 @@ class VirtualFileSystem implements FileSystem {
         final parts = virtualPath.split('/').sublist(1);
         var current = _root;
         current = _traverseTree(parts, current);
-        final file = TreeFileNode(parts.last);
+        final file = TreeFileNode(parts.last, parent: current);
         fileNodeToVirtualPathPair[file] = virtualPath;
         current.children.add(file);
       }
@@ -73,7 +74,7 @@ class VirtualFileSystem implements FileSystem {
   }
 
   FileNode _addDirectory(FileNode current, String name) {
-    final directory = TreeFileNode(name);
+    final directory = TreeFileNode(name, parent: current);
     current.children.add(directory);
     return directory;
   }
