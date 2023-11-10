@@ -17,6 +17,8 @@ abstract class FileNode {
 
   List<FileNode> get directories;
 
+  FileNode? get parent;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
