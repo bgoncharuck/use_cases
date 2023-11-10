@@ -8,8 +8,10 @@ class TreeFileNode implements FileNode {
   final String name;
   @override
   final List<FileNode> children = [];
+  @override
+  final FileNode? parent;
 
-  TreeFileNode(this.name);
+  TreeFileNode(this.name, {required this.parent});
 
   @override
   bool get isFile => children.isEmpty;
@@ -21,7 +23,10 @@ class TreeFileNode implements FileNode {
   FileNode? findChild(String name) {
     try {
       return children.firstWhere((child) => child.name == name);
-    } catch (e) {
+    } catch (_) {
+      if (parent != null) {
+        return parent!.findChild(name);
+      }
       return null;
     }
   }
