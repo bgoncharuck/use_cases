@@ -25,6 +25,7 @@ analyzer:
 
 linter:
   rules:
+    leading_newlines_in_multiline_strings: false
     always_use_package_imports: false
     prefer_single_quotes: true
     prefer_int_literals: false
