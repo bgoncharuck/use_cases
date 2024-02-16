@@ -2,6 +2,7 @@ import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 
 Future<String> getIDFAId() async {
   try {
+    /// FYI: will crash app if no device ID, try-catch won't help since system call crash
     final status = await AppTrackingTransparency.requestTrackingAuthorization();
 
     if (status == TrackingStatus.authorized) {
