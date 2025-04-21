@@ -1,3 +1,46 @@
+/// app
+
+class App extends StatelessWidget {
+  const App({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    navigatorKey = GlobalKey<NavigatorState>();
+    final routeHistoryObserver = RouteHistoryObserver();
+
+    return CupertinoApp(
+      debugShowCheckedModeBanner: false,
+      home: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (_, __) async {
+          if (routeHistoryObserver.top?.settings.name == pathHomeScreen) {
+            return;
+          }
+
+          navigatorKey.currentState!.pop();
+        },
+        child: Stack(
+          children: [
+            Center(
+              child: Navigator(
+                key: navigatorKey,
+                observers: [routeHistoryObserver],
+                onGenerateRoute: generateRoute,
+                initialRoute: pathInitialization,
+              ),
+            ),
+            const Position(child: Something()),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// routes
+
+late GlobalKey<NavigatorState> navigatorKey;
+
 const String pathHomeScreen = '/home_screen';
 const String pathDirectoryScreen = '/directory_screen';
 const String pathSettingsScreen = '/settings_screen';
@@ -14,8 +57,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         child: const HomeScreen(),
       );
     case pathDirectoryScreen:
-      path = DirectoryLocator(
-        controller: DirectoryController(),
+      path = DirectoryScreenLocator(
+        controller: DirectoryScreenController(
+          params: arguments! as DirectoryParams,
+        ),
         child: const DirectoryScreen(),
       );
     case pathSettingsScreen:
@@ -27,35 +72,60 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       throw const RouteException('Route not found');
   }
 
-  return TransitionBuilder(
-    route: path,
+return PageRouteBuilder(
+    settings: settings,
+    maintainState: false,
+    opaque: false,
+    transitionDuration: const Duration(milliseconds: 144),
+    reverseTransitionDuration: const Duration(milliseconds: 144),
+    pageBuilder: (context, animation, secondaryAnimation) => path,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(1, 0);
+      const end = Offset.zero;
+      const curve = Curves.easeInSine;
+
+      final tween = Tween(
+        begin: begin,
+        end: end,
+      ).chain(CurveTween(curve: curve));
+
+      return SlideTransition(position: animation.drive(tween), child: child);
+    },
   );
 }
 
 class RouteException implements Exception {
-  final String message;
   const RouteException(this.message);
+  final String message;
 }
 
-// ignore: strict_raw_type
-class TransitionBuilder extends PageRouteBuilder {
-  final Widget route;
-  final Duration duration;
-  final Duration reverseDuration;
-  final Curve curve;
+class RouteHistoryObserver extends NavigatorObserver {
+  final List<Route<dynamic>> _history = [];
 
-  TransitionBuilder({
-    required this.route,
-    this.duration = const Duration(milliseconds: 300),
-    this.reverseDuration = const Duration(milliseconds: 300),
-    this.curve = Curves.easeInOut,
-  }) : super(
-          pageBuilder: (context, animate, _) => route,
-          transitionDuration: duration,
-          reverseTransitionDuration: reverseDuration,
-          transitionsBuilder: (context, animation, anim, child) {
-            final animated = Tween<double>(begin: 0.0, end: 1.0).chain(CurveTween(curve: curve)).animate(animation);
-            return FadeTransition(opacity: animated, child: child);
-          },
-        );
+  List<Route<dynamic>> get history => List.unmodifiable(_history);
+
+  Route<dynamic>? get top => _history.isNotEmpty ? _history.last : null;
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    _history.add(route);
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    _history.remove(route);
+  }
+
+  @override
+  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    _history.remove(route);
+  }
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    final index = _history.indexOf(oldRoute!);
+    if (index != -1 && newRoute != null) {
+      _history[index] = newRoute;
+    }
+  }
 }
