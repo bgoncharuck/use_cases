@@ -12,7 +12,7 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: PopScope(
         canPop: false,
-        onPopInvokedWithResult: (_, __) async {
+        onPopInvokedWithResult: (_, __) {
           if (routeHistoryObserver.top?.settings.name == pathHomeScreen) {
             return;
           }
