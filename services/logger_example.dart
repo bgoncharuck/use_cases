@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
+/// interface
 late final LoggingLibrary log;
 
 abstract class LoggingLibrary {
@@ -8,6 +9,7 @@ abstract class LoggingLibrary {
   Future<void> message(String message);
 }
 
+/// implementations
 class SentryLogging implements LoggingLibrary {
   const SentryLogging();
 
@@ -29,7 +31,7 @@ class DebugPrintLogging implements LoggingLibrary {
 class MultipleLibrariesLogging implements LoggingLibrary {
   final Iterable<LoggingLibrary> libraries = [
     const SentryLogging(),
-    if (kDebugMode) const DebugPrintLogging(),
+    if (kDebugMode || kProfileMode) const DebugPrintLogging(),
   ];
 
   @override
@@ -44,5 +46,15 @@ class MultipleLibrariesLogging implements LoggingLibrary {
     for (final lib in libraries) {
       await lib.message(message);
     }
+  }
+}
+
+/// init
+class InitializeLogger with IUseCase<void, void> {
+  const InitializeLogger();
+
+  @override
+  Future<void> execute({void params}) async {
+    log = MultipleLibrariesLogging();
   }
 }
