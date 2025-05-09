@@ -19,8 +19,8 @@ class ObservableClassName extends ObservableController<EventType, StateType>
   Future<void> logic(EventType event) async {
     /// Logic
 
-    if (event is InitialState) {
-      return _onInitialState(event);
+    if (event is InitialEvent {
+      return _onInitialEvent(event);
     }
   }
 }
