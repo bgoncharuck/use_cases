@@ -21,8 +21,9 @@ import 'package:flutter/foundation.dart';
 
 abstract class ObservableInterface<E, S> {
   void event(E event);
-  S get state;
   Listenable get notifier;
+  /// makes ValueNotifier state available only for reading outside of the class
+  S get state;
 }
 
 abstract class ObservableController<E, S> {
@@ -31,7 +32,7 @@ abstract class ObservableController<E, S> {
     _events.stream.listen(_handleEvent);
   }
 
-  // Must be overridden
+  /// Must be overridden
   Future<void> logic(E event);
 
   final _events = StreamController<E>();
@@ -44,6 +45,8 @@ abstract class ObservableController<E, S> {
 
   S get state => _states.value;
   Listenable get notifier => _states;
+
+  /// can be used only inside the class and unavailable outside of it
   set state(S newState) {
     _states.value = newState;
   }
