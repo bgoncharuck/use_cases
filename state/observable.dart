@@ -1,4 +1,14 @@
-/// Example
+/// - **Hot Stream In (events):** Incoming events (e.g., user interactions, data updates) are continuously fed
+///   into the `Observable` through the `.event` sink. This stream of events is active
+///   regardless of whether any listeners are observing the state.
+///
+/// - **Cold Output (state and notifier):**
+///   - The current state of the `Observable` is directly accessible through the `.state` property. This is a
+///     "cold" value in the sense that it only provides the current snapshot when accessed.
+///   - Changes to the state are broadcast through the `.notifier`, which implements [Listenable]. Listeners
+///     subscribing to the `.notifier` will be notified of subsequent state changes triggered by incoming events.
+///
+/// Example:
 /*
 class ObservableClassName extends ObservableController<EventType, StateType>
     implements ObservableInterface<EventType, StateType> {
