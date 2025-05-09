@@ -1,3 +1,21 @@
+/// Example
+/*
+class ObservableClassName extends ObservableController<EventType, StateType>
+    implements ObservableInterface<EventType, StateType> {
+  /// first state
+  ObservableClassName() : super(const InitialState());
+
+  @override
+  Future<void> logic(EventType event) async {
+    /// Logic
+
+    if (event is InitialState) {
+      return _onInitialState(event);
+    }
+  }
+}
+*/
+
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 
