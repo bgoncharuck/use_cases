@@ -5,7 +5,7 @@ import 'screen_locator.dart';
 import 'screen_module.dart';
 
 class RoutingLayer<
-  InitializationConfig extends ScreenModule<
+  InitializationModule extends ScreenModule<
     InitializationParams,
     InitializationController,
     InitializationLocator
@@ -14,15 +14,15 @@ class RoutingLayer<
   InitializationController extends ScreenController<InitializationParams>,
   InitializationLocator extends ScreenLocator<InitializationController>,
 
-  HomeConfig extends ScreenModule<HomeParams, HomeController, HomeLocator>,
+  HomeModule extends ScreenModule<HomeParams, HomeController, HomeLocator>,
   HomeParams extends ScreenControllerParams,
   HomeController extends ScreenController<HomeParams>,
   HomeLocator extends ScreenLocator<HomeController>
 > {
   const RoutingLayer({required this.initialization, required this.home});
 
-  final InitializationConfig initialization;
-  final HomeConfig home;
+  final InitializationModule initialization;
+  final HomeModule home;
 
   Route<dynamic> generateRoute(RouteSettings settings) {
     final arguments = settings.arguments;
